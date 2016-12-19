@@ -12,4 +12,4 @@ libraries:
 - name: markupsafe
   version: "0.15"
 - name: pycrypto
-  version: "2.6.1"
+  version: "2.6"
