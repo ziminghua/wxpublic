@@ -8,6 +8,8 @@
 #########################################################################
 from WXBizMsgCrypt import WXBizMsgCrypt
 
+import re
+
 if __name__ == "__main__":
     """
     1.第三方回复加密消息给公众平台；
@@ -32,3 +34,4 @@ if __name__ == "__main__":
     decrypt_test = WXBizMsgCrypt(token, encodingAESKey, appid)
     ret, decryp_xml = decrypt_test.DecryptMsg(from_xml, msg_sign, timestamp, nonce)
     print ret, decryp_xml
+
