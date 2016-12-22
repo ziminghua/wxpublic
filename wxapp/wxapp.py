@@ -34,11 +34,11 @@ class WxApp(object):
     def weather_search(request):
         _log("info", "开始")
         signature, timestamp, nonce = WxApp.get_query_param(request)
-        _log("info", "%s %s %s" % signature, timestamp, nonce)
+        _log("info", "%s %s %s" % (signature, timestamp, nonce))
         content, to_user = WxApp.get_content(request)
-        _log("info", "%s %s" % content, to_user)
+        _log("info", "%s %s" % (content, to_user))
         ret, encrypt_xml = WxApp.send_data(content, to_user, nonce)
-        _log("info", "%s %s" % ret, encrypt_xml)
+        _log("info", "%s %s" % (ret, encrypt_xml))
         #city_string = WxApp.get_content(request)
         #city_code = city_dic.city_dic[city_string]
         #url_open = urllib.urlopen("http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
