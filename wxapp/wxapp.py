@@ -32,6 +32,7 @@ class WxApp(object):
 
     @staticmethod
     def weather_search(request):
+        _log("info", "开始")
         signature, timestamp, nonce = WxApp.get_query_param(request)
         _log("info", "%s %s %s" % signature, timestamp, nonce)
         content, to_user = WxApp.get_content(request)
