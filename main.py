@@ -12,7 +12,7 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def wx_main():
     _log("info", "收到请求")
     if "echostr" in request.values:

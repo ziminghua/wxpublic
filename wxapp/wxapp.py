@@ -7,7 +7,8 @@ import urllib
 from werkzeug._internal import _log
 
 
-appid = "c41c084feb0d18dd1937ba989f667b42"
+appid = "wx6c5bf5420da6e8c6"
+secre = "c41c084feb0d18dd1937ba989f667b42"
 token = "ICcxs5844qOY24rTc1c696X5btR551m2"
 encodingAESKey = "rEotmyYHNsLLXM1olf3ntRx2PXCYXK6eQ3CxWCJegSV"
 wxcpt = WXBizMsgCrypt(token, encodingAESKey, appid)
@@ -16,8 +17,8 @@ wxcpt = WXBizMsgCrypt(token, encodingAESKey, appid)
 class WxApp(object):
     @staticmethod
     def is_valid(request):
-        print "==========开始认证==============="
-        print "==========URL参数==============="
+        _log("info", "==========开始认证===============")
+        _log("info", "==========URL参数===============")
         signature, timestamp, nonce = WxApp.get_query_param(request)
         verifyEchoStr = request.values["echostr"]
         param_list = [token, timestamp, nonce]
@@ -60,7 +61,7 @@ class WxApp(object):
 
     @staticmethod
     def get_query_param(request):
-        signature = request.values["msg_signature"]
+        signature = ("msg_signature" in request.values) and request.values["msg_signature"] or request.values["signature"]
         timestamp = request.values["timestamp"]
         nonce = request.values["nonce"]
         return signature, timestamp, nonce
