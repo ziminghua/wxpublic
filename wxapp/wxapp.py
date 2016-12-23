@@ -37,9 +37,9 @@ class WxApp(object):
         _log("info", "开始")
         signature, timestamp, nonce = WxApp.get_query_param(request)
         _log("info", "%s %s %s" % (signature, timestamp, nonce))
-        content, from_user = WxApp.get_content(request)
+        content, from_user, to_user = WxApp.get_content(request)
         _log("info", "%s %s" % (content, from_user))
-        ret, encrypt_xml = WxApp.send_data(content, from_user, nonce)
+        ret, encrypt_xml = WxApp.send_data(content, from_user, to_user, nonce)
         _log("info", "%s %s" % (ret, encrypt_xml))
         #city_string = WxApp.get_content(request)
         #city_code = city_dic.city_dic[city_string]
@@ -58,7 +58,7 @@ class WxApp(object):
         post_content = request.data
         ret, xml_content = wxcpt.DecryptMsg(post_content, signature, timestamp, nonce)
         xml_tree = ET.fromstring(xml_content)
-        return xml_tree.find("Content").text, xml_tree.find("FromUserName").text
+        return xml_tree.find("Content").text, xml_tree.find("FromUserName").text, xml_tree.find("ToUserName").text
 
 
     @staticmethod
@@ -69,9 +69,9 @@ class WxApp(object):
         return signature, timestamp, nonce
 
     @staticmethod
-    def send_data(content, to_user, nonce):
-        template = """<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[ziminghua88]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"""
+    def send_data(content, to_user, from_user, nonce):
+        template = """<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"""
         _log("info", template % (to_user, str(int(time.time())), content))
-        return wxcpt.EncryptMsg(template % (to_user, str(int(time.time())), content), nonce)
+        return wxcpt.EncryptMsg(template % (to_user, from_user, str(int(time.time())), content), nonce)
 
 
