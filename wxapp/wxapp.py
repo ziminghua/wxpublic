@@ -12,7 +12,7 @@ appid = "wx6c5bf5420da6e8c6"
 secre = "c41c084feb0d18dd1937ba989f667b42"
 token = "ICcxs5844qOY24rTc1c696X5btR551m2"
 encodingAESKey = "rEotmyYHNsLLXM1olf3ntRx2PXCYXK6eQ3CxWCJegSV"
-base_url = "https://wxpublic-153007.appspot.com/hello"
+base_url = "http://wxpublic-153007.appspot.com/hello"
 wxcpt = WXBizMsgCrypt(token, encodingAESKey, appid)
 
 
