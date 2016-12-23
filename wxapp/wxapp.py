@@ -49,7 +49,7 @@ class WxApp(object):
         if ret == 0:
             return encrypt_xml
         else:
-            return ret
+            return str(ret)
 
     @staticmethod
     def get_content(request):

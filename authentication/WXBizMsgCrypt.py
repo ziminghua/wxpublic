@@ -156,13 +156,13 @@ class Prpcrypt(object):
         text = pkcs7.encode(text)
         # 加密
         cryptor = AES.new(self.key, self.mode, self.key[:16])
-        try:
-            ciphertext = cryptor.encrypt(text)
-            # 使用BASE64对加密后的字符串进行编码
-            return ierror.WXBizMsgCrypt_OK, base64.b64encode(ciphertext)
-        except Exception, e:
-            #print e
-            return ierror.WXBizMsgCrypt_EncryptAES_Error, None
+        #try:
+        ciphertext = cryptor.encrypt(text)
+        # 使用BASE64对加密后的字符串进行编码
+        return ierror.WXBizMsgCrypt_OK, base64.b64encode(ciphertext)
+        #except Exception, e:
+        #    print e
+        #    return ierror.WXBizMsgCrypt_EncryptAES_Error, None
 
     def decrypt(self, text, appid):
         """对解密后的明文进行补位删除
