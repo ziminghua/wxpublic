@@ -70,7 +70,7 @@ class WxApp(object):
 
     @staticmethod
     def send_data(content, to_user, from_user, nonce):
-        template = """<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"""
+        template = u"""<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"""
         _log("info", template % (to_user, from_user, str(int(time.time())), content))
         return wxcpt.EncryptMsg(template % (to_user, from_user, str(int(time.time())), content), nonce)
 
