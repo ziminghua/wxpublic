@@ -12,6 +12,7 @@ appid = "wx6c5bf5420da6e8c6"
 secre = "c41c084feb0d18dd1937ba989f667b42"
 token = "ICcxs5844qOY24rTc1c696X5btR551m2"
 encodingAESKey = "rEotmyYHNsLLXM1olf3ntRx2PXCYXK6eQ3CxWCJegSV"
+base_url = "https://wxpublic-153007.appspot.com?url="
 wxcpt = WXBizMsgCrypt(token, encodingAESKey, appid)
 
 
@@ -44,7 +45,7 @@ class WxApp(object):
         senddata = content
         if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
-            url_open = urllib.urlopen("http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
+            url_open = urllib.urlopen(base_url + "http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
             senddata = url_open.read()
 
         ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
