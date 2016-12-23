@@ -39,10 +39,10 @@ class WxApp(object):
         _log("info", "%s %s %s" % (signature, timestamp, nonce))
         content, from_user, to_user = WxApp.get_content(request)
         _log("info", "%s %s" % (content, from_user))
-        city_string = content
+        city_string = content.encode("utf-8")
 
         senddata = content
-        if content in city_dic.city_dic:
+        if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
             url_open = urllib.urlopen("http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
             senddata = url_open.read()
@@ -58,6 +58,7 @@ class WxApp(object):
         signature, timestamp, nonce = WxApp.get_query_param(request)
         post_content = request.data
         ret, xml_content = wxcpt.DecryptMsg(post_content, signature, timestamp, nonce)
+        #xml_content = post_content
         xml_tree = ET.fromstring(xml_content)
         return xml_tree.find("Content").text, xml_tree.find("FromUserName").text, xml_tree.find("ToUserName").text
 
