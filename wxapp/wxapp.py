@@ -45,7 +45,9 @@ class WxApp(object):
         senddata = content
         if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
-            url_open = urllib.urlopen(base_url + "http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
+            url = base_url + "http://www.weather.com.cn/data/cityinfo/%s.html" % city_code
+            _log("info", url)
+            url_open = urllib.urlopen(url)
             senddata = url_open.read()
 
         ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
