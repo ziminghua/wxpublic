@@ -57,7 +57,7 @@ class WxApp(object):
         post_content = request.data
         ret, xml_content = wxcpt.DecryptMsg(post_content, signature, timestamp, nonce)
         xml_tree = ET.fromstring(xml_content)
-        return xml_tree.find("Content").text, xml_tree.find("ToUserName")
+        return xml_tree.find("Content").text, xml_tree.find("ToUserName").text
 
 
     @staticmethod
@@ -69,7 +69,13 @@ class WxApp(object):
 
     @staticmethod
     def send_data(content, to_user, nonce):
-        template = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[ziminghua88]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"
+        template = """<xml>
+                        <ToUserName><![CDATA[%s]]></ToUserName>
+                        <FromUserName><![CDATA[ziminghua88]]></FromUserName>
+                        <CreateTime>%s</CreateTime>
+                        <MsgType><![CDATA[text]]></MsgType>
+                        <Content><![CDATA[%s]]></Content>
+                     </xml>"""
         return wxcpt.EncryptMsg(template % (to_user, str(int(time.time())), content), nonce)
 
 
