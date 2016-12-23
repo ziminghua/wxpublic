@@ -39,14 +39,15 @@ class WxApp(object):
         _log("info", "%s %s %s" % (signature, timestamp, nonce))
         content, from_user, to_user = WxApp.get_content(request)
         _log("info", "%s %s" % (content, from_user))
-        ret, encrypt_xml = WxApp.send_data(content, from_user, to_user, nonce)
-        _log("info", "%s %s" % (ret, encrypt_xml))
-        #city_string = WxApp.get_content(request)
-        #city_code = city_dic.city_dic[city_string]
-        #url_open = urllib.urlopen("http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
-        #s = url_open.read()
-        #s = WxApp.get_content(request).encode("utf-8")
+        city_string = content
 
+        senddata = content
+        if content in city_dic.city_dic:
+            city_code = city_dic.city_dic[city_string]
+            url_open = urllib.urlopen("http://www.weather.com.cn/data/cityinfo/%s.html" % city_code)
+            senddata = url_open.read()
+
+        ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
         if ret == 0:
             return encrypt_xml
         else:
