@@ -49,8 +49,9 @@ class WxApp(object):
             url = base_url + urllib.urlencode({'url': "http://apis.baidu.com/heweather/weather/free?cityid=CN%s" % city_code})
             _log("info", url)
             url_open = urllib.urlopen(url)
-            _log("info", url_open)
-            json_data = json.loads(url_open)["HeWeather data service 3.0"][0]
+            url_data = url_open.read()
+            _log("info", url_data)
+            json_data = json.loads(url_data)["HeWeather data service 3.0"][0]
             senddata = "城市：" + json_data["basic"]["city"] + "\n"
             senddata += "更新时间：" + json_data["basic"]["update"]["loc"] + "\n"
             senddata += "实况天气：%s 温度：%s 湿度：%s \n" % (json_data["now"]["cond"]["txt"], json_data["now"]["tmp"], json_data["now"]["hum"])
