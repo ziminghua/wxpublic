@@ -54,12 +54,12 @@ class WxApp(object):
             json_data = json.loads(url_data)["HeWeather data service 3.0"][0]
             senddata = "城市：" + json_data["basic"]["city"] + "\n"
             senddata += "更新时间：" + json_data["basic"]["update"]["loc"] + "\n"
-            senddata += "实况天气：%s 温度：%s 湿度：%s \n" % (json_data["now"]["cond"]["txt"], json_data["now"]["tmp"], json_data["now"]["hum"])
+            senddata += "实况天气：%s 温度：%s℃ 湿度：%s \n" % (json_data["now"]["cond"]["txt"], json_data["now"]["tmp"], json_data["now"]["hum"])
             senddata += "空气质量：指数：%s PM2.5：%s PM10：%s \n\n" % (json_data["aqi"]["city"]["aqi"], json_data["aqi"]["city"]["pm25"], json_data["aqi"]["city"]["pm10"])
             for date_data in json_data["daily_forecast"]:
                 senddata += "日期：" + date_data["date"] + "\n"
                 senddata += "日出时间：%s 日落时间：%s \n" % (date_data["astro"]["sr"], date_data["astro"]["ss"])
-                senddata += "天气：%s 温度：%s-%s 湿度：%s 能见度：%s\n\n" % (date_data["cond"]["txt_d"], date_data["tmp"]["min"], date_data["tmp"]["max"], date_data["hum"], date_data["vis"])
+                senddata += "天气：%s 温度：%s℃～%s℃ 湿度：%s 能见度：%s\n\n" % (date_data["cond"]["txt_d"], date_data["tmp"]["min"], date_data["tmp"]["max"], date_data["hum"], date_data["vis"])
 
         ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
         if ret == 0:
