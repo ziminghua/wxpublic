@@ -5,6 +5,7 @@ from authentication.WXBizMsgCrypt import WXBizMsgCrypt
 import xml.etree.cElementTree as ET
 import city_dic
 import urllib
+import json
 from werkzeug._internal import _log
 
 
@@ -45,10 +46,18 @@ class WxApp(object):
         senddata = content
         if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
-            url = base_url + urllib.urlencode({'url': "http://www.weather.com.cn/data/cityinfo/%s.html" % city_code})
+            url = base_url + urllib.urlencode({'url': "http://apis.baidu.com/heweather/weather/free?cityid=CN%s" % city_code})
             _log("info", url)
             url_open = urllib.urlopen(url)
-            senddata = url_open.read()
+            json_data = json.loads(url_open)["HeWeather data service 3.0"][0]
+            senddata = "城市：" + json_data["basic"]["city"] + "\n"
+            senddata += "更新时间：" + json_data["basic"]["update"]["loc"] + "\n"
+            senddata += "实况天气：%s 温度：%s 湿度：%s \n" % (json_data["now"]["cond"]["txt"], json_data["now"]["tmp"], json_data["now"]["hum"])
+            senddata += "空气质量：指数：%s PM2.5：%s PM10：%s \n\n" % (json_data["aqi"]["city"]["aqi"], json_data["aqi"]["city"]["pm25"], json_data["aqi"]["city"]["pm10"])
+            for date_data in json_data["daily_forecast"]:
+                senddata += "日期：" + date_data["date"] + "\n"
+                senddata += "日出时间：%s 日落时间：%s \n" % (date_data["astro"]["sr"], date_data["astro"]["ss"])
+                senddata += "天气：%s 温度：%s-%s 湿度：%s 能见度：%s\n\n" % (date_data["cond"]["txt_d"], date_data["tmp"]["min"], date_data["tmp"]["max"], date_data["hum"], date_data["vis"])
 
         ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
         if ret == 0:
@@ -79,5 +88,3 @@ class WxApp(object):
         template = u"""<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>"""
         _log("info", (template % (to_user, from_user, timeInt, content)).encode("UTF-8"))
         return wxcpt.EncryptMsg((template % (to_user, from_user, timeInt, content)).encode("UTF-8"), nonce)
-
-
