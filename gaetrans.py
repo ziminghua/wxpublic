@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import urllib
 from flask import Flask, request
 
@@ -21,6 +24,10 @@ def gae_transmitted():
         post_data = request.form
         resp = urllib.urlopen(url, urllib.urlencode(post_data))
         return resp.read()
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 if __name__ == '__main__':
     app.run(port=80)
