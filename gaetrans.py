@@ -7,13 +7,20 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World Gae!'
 
-@app.route('/')
+
+@app.route('/', methods=["GET", "POST"])
 def gae_transmitted():
     url = request.values["url"]
+    method = request.values["method"].upper()
     url = urllib.unquote(url)
-    url_open = urllib.urlopen(url)
-    return url_open.read()
-
+    if method == "GET":
+        url = urllib.unquote(url)
+        url_open = urllib.urlopen(url)
+        return url_open.read()
+    else:
+        post_data = request.form
+        resp = urllib.urlopen(url, urllib.urlencode(post_data))
+        return resp.read()
 
 if __name__ == '__main__':
     app.run(port=80)

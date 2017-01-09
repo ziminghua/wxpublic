@@ -61,7 +61,7 @@ class WxApp(object):
     @staticmethod
     def fanyi(content):
         senddata = ""
-        url = base_url + urllib.urlencode({'url': "http://fanyi.baidu.com/v2transapi"})
+        url = base_url + urllib.urlencode({'url': "http://fanyi.baidu.com/v2transapi", 'method': 'post'})
         data = {'query': content, 'from': 'en', 'to': 'zh', 'simple_means_flag': 3}
         _log("info", url)
         resp = urllib.urlopen(url, urllib.urlencode(data))
@@ -69,7 +69,7 @@ class WxApp(object):
         _log("info", url_data)
         json_data = json.loads(url_data)
         for data in json_data["dict_result"]["simple_means"]["symbols"][0]["parts"]:
-            senddata += data["part"].ljust(5) + ";".join(data["means"]) + ";"
+            senddata += data["part"].ljust(5) + ";".join(data["means"]) + ";\n"
         return senddata
 
     @staticmethod
@@ -78,7 +78,7 @@ class WxApp(object):
         senddata = ""
         if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
-            url = base_url + urllib.urlencode({'url': "http://apis.baidu.com/heweather/weather/free?cityid=CN%s" % city_code})
+            url = base_url + urllib.urlencode({'url': "http://apis.baidu.com/heweather/weather/free?cityid=CN%s" % city_code, 'method': 'get'})
             _log("info", url)
             url_open = urllib.urlopen(url)
             url_data = url_open.read()
