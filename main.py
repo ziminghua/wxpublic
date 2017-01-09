@@ -19,7 +19,7 @@ def wx_main():
         return WxApp.is_valid(request)
     else:
         _log("info", "被动回复")
-        return WxApp.weather_search(request)
+        return WxApp.reply(request)
 
 
 if __name__ == '__main__':

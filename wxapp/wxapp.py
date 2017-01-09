@@ -15,7 +15,9 @@ token = "ICcxs5844qOY24rTc1c696X5btR551m2"
 encodingAESKey = "rEotmyYHNsLLXM1olf3ntRx2PXCYXK6eQ3CxWCJegSV"
 base_url = "http://wxpublic-153007.appspot.com/?"
 wxcpt = WXBizMsgCrypt(token, encodingAESKey, appid)
-
+from_user = ""
+to_user = ""
+nonce = ""
 
 class WxApp(object):
     @staticmethod
@@ -35,15 +37,45 @@ class WxApp(object):
             return ""
 
     @staticmethod
-    def weather_search(request):
+    def reply(request):
         _log("info", "开始")
         signature, timestamp, nonce = WxApp.get_query_param(request)
         _log("info", "%s %s %s" % (signature, timestamp, nonce))
         content, from_user, to_user = WxApp.get_content(request)
         _log("info", "%s %s" % (content, from_user))
-        city_string = content.encode("utf-8")
 
-        senddata = content
+        senddata = WxApp.weather_search(content)
+
+        if senddata == "":
+            senddata = WxApp.fanyi(content)
+
+        if senddata == "":
+            senddata = content
+
+        ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
+        if ret == 0:
+            return encrypt_xml
+        else:
+            return str(ret)
+
+    @staticmethod
+    def fanyi(content):
+        senddata = ""
+        url = base_url + urllib.urlencode({'url': "http://fanyi.baidu.com/v2transapi"})
+        data = {'query': content, 'from': 'en', 'to': 'zh', 'simple_means_flag': 3}
+        _log("info", url)
+        resp = urllib.urlopen(url, urllib.urlencode(data))
+        url_data = resp.read()
+        print url_data
+        json_data = json.loads(url_data)
+        for data in json_data["dict_result"]["simple_means"]["symbols"][0]["parts"]:
+            senddata += data["part"].ljust(5) + ";".join(data["means"]) + ";"
+        return senddata
+
+    @staticmethod
+    def weather_search(content):
+        city_string = content.encode("utf-8")
+        senddata = ""
         if city_string in city_dic.city_dic:
             city_code = city_dic.city_dic[city_string]
             url = base_url + urllib.urlencode({'url': "http://apis.baidu.com/heweather/weather/free?cityid=CN%s" % city_code})
@@ -60,12 +92,7 @@ class WxApp(object):
                 senddata += "日期：" + date_data["date"] + "\n"
                 senddata += "日出时间：%s 日落时间：%s \n" % (date_data["astro"]["sr"], date_data["astro"]["ss"])
                 senddata += "天气：%s\n温度：%s℃～%s℃ 湿度：%s 能见度：%s\n\n" % (date_data["cond"]["txt_d"], date_data["tmp"]["min"], date_data["tmp"]["max"], date_data["hum"], date_data["vis"])
-
-        ret, encrypt_xml = WxApp.send_data(senddata, from_user, to_user, nonce)
-        if ret == 0:
-            return encrypt_xml
-        else:
-            return str(ret)
+        return senddata
 
     @staticmethod
     def get_content(request):
@@ -75,7 +102,6 @@ class WxApp(object):
         #xml_content = post_content
         xml_tree = ET.fromstring(xml_content)
         return xml_tree.find("Content").text, xml_tree.find("FromUserName").text, xml_tree.find("ToUserName").text
-
 
     @staticmethod
     def get_query_param(request):
