@@ -66,7 +66,7 @@ class WxApp(object):
         _log("info", url)
         resp = urllib.urlopen(url, urllib.urlencode(data))
         url_data = resp.read()
-        print url_data
+        _log("info", url_data)
         json_data = json.loads(url_data)
         for data in json_data["dict_result"]["simple_means"]["symbols"][0]["parts"]:
             senddata += data["part"].ljust(5) + ";".join(data["means"]) + ";"
